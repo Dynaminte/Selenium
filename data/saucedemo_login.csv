@@ -1,0 +1,5 @@
+username,password,expected,tc_id,description
+standard_user,secret_sauce,PASS,TC-EC-001,Login user valid standard_user
+locked_out_user,secret_sauce,FAIL,TC-EC-002,User yang dikunci sistem
+wrong_user,secret_sauce,FAIL,TC-EC-003,Username tidak terdaftar
+standard_user,wrong_pass,FAIL,TC-EC-003b,Password salah untuk user valid

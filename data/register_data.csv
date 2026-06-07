@@ -1,0 +1,9 @@
+username,email,password,expected,tc_id,description
+John Doe,john@test.com,Test@1234,PASS,TC-REG-001,Data lengkap valid
+Jane Smith,jane@t.com,Short1,FAIL,TC-REG-002,Password pendek
+Bob Jones,invalidEmail,Test@1234,FAIL,TC-REG-003,Email tidak valid
+ ,empty@test.com,Test@1234,FAIL,TC-REG-004,Username kosong
+Alice,alice@t.com,,FAIL,TC-REG-005,Password kosong
+Charlie,c@t.com,Test@1234,FAIL,TC-REG-006,Konfirmasi beda
+Dave,dave@t.com,Test@1234,PASS,TC-REG-007,Data valid 2
+Eve,eve@t.com,Abcdefgh1,PASS,TC-REG-008,Password 9 char

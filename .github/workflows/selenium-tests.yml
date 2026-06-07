@@ -1,0 +1,105 @@
+name: Selenium QA Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ── Job 1: E2E SauceDemo Tests (12 test, target 75% pass rate) ──────────
+  saucedemo-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run SauceDemo E2E Tests (12 test cases)
+        continue-on-error: true
+        run: |
+          pytest tests/test_saucedemo_login.py \
+                 tests/test_inventory.py \
+                 tests/test_cart.py \
+                 tests/test_checkout.py \
+                 tests/test_e2e_checkout.py \
+                 --alluredir=reports/allure-results -v
+
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: reports/allure-results
+
+      - name: Upload Screenshots on Failure
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots-saucedemo
+          path: reports/screenshots/
+
+  # ── Job 2: Logout Tests (the-internet.herokuapp.com) ────────────────────
+  logout-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Logout Tests (2 test cases)
+        run: |
+          pytest tests/test_logout.py -v
+
+  # ── Job 3: Register DDT Tests (data-driven dari CSV) ────────────────────
+  register-ddt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Register DDT Tests (8 test cases)
+        continue-on-error: true
+        run: |
+          pytest tests/test_register_ddt.py -v -s
+
+      - name: Upload DDT Screenshots
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots-register-ddt
+          path: reports/screenshots/
